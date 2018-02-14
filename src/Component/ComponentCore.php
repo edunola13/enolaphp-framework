@@ -2,7 +2,7 @@
 namespace Enola\Component;
 use Enola\Support\Error;
 use Enola\Http\Models\En_HttpRequest;
-//asdasd
+
 /**
  * Esta clase representa el Nucleo del modulo Component y es donde se encuentra toda la funcionalidad del mismo.
  * Este proveera metodos para saber si la URL mapea con la de los componentes y ejecutar un component via URL o
