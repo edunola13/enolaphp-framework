@@ -18,7 +18,7 @@ class Application{
      * @var \Enola\EnolaContext */
     public $context;
     /** Instancia del Sistema de Cache de uso interno 
-     * @var Cache\CacheInterface */
+     * @var Enola\Support\Cache\CacheInterface */
     public $cache;
     /** Prefijo a utilizar en el Sistema de Cache 
      * @var string */
@@ -103,11 +103,11 @@ class Application{
         //Load Archivos de Funciones
         $this->loadFunctionsFiles();
         //Instancio el sistema de Cache
-        $this->cache= new Cache\Cache();
+        $this->cache= new Support\Cache\Cache();
         //EnolaContext->init(): Cargo las configuraciones de contexto faltante
         $this->context->init();
         //Instancio el motor de Dependencias
-        $this->dependenciesEngine= new Support\DependenciesEngine();     
+        $this->dependenciesEngine= new Support\DependencyEngine\DependenciesEngine();    
     }
     /**
      * Carga de modulos de soporte para que el framework trabaje correctamente

@@ -152,7 +152,7 @@ class ComponentCore{
      * @return boolean
      */
     protected function havaAuthorization($component){
-        $auth= \Enola\Support\Authorization::getInstance();
+        $auth= \Enola\Support\Authorization\Authorization::getInstance();
         return $auth->userHasAccessToComponentDefinition($this->request, $component);
     }
     /**
