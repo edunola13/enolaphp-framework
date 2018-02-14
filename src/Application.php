@@ -107,7 +107,9 @@ class Application{
         //EnolaContext->init(): Cargo las configuraciones de contexto faltante
         $this->context->init();
         //Instancio el motor de Dependencias
-        $this->dependenciesEngine= new Support\DependencyEngine\DependenciesEngine();    
+        $this->dependenciesEngine= new Support\DependencyEngine\DependenciesEngine();
+        //Cargo las librerias definidas por el usuario
+        $this->loadLibraries();
     }
     /**
      * Carga de modulos de soporte para que el framework trabaje correctamente
@@ -119,6 +121,17 @@ class Application{
         require $this->context->getPathFra() . 'Support/fn_load_files.php';      
         //Carga el modulo de funciones de vista exportadas al usuario de manera simple
         require $this->context->getPathFra() . 'Support/fn_view.php';
+    }
+    /**
+     * Carga todas las librerias particulares de la aplicacion que se cargaran automaticamente indicadas en el archivo de configuracion
+     */
+    protected function loadLibraries(){       
+        //Recorro de a una las librerias, las importo
+        foreach ($this->context->getLibrariesDefinition() as $libreria) {
+            //$libreria['class'] tiene la direccion completa desde LIBRARIE, no solo el nombre
+            $dir= $libreria['path'];
+            Support\import_librarie($dir);
+        }
     }
     /**
      * Carga e inicializa el modulo HTTP

@@ -9,7 +9,7 @@ use Enola\EnolaContext as Ctx;
  * @param string $dir
  */
 function import_librarie($dir){
-    $dir= PATHAPP . 'libraries/' . $dir . '.php';
+    $dir= PATHAPP . 'libs/' . $dir . '.php';
     require_once $dir;
 }
 /**

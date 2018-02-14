@@ -89,9 +89,6 @@ class EnolaContext {
     /** Path archivo de authorization
      * @var string */
     private $authorizationFile;
-    /** Path archivo autoload.php
-     * @var string */
-    private $composerAutoload;
     /** Path archivo de configuracion de database
      * @var string */
     private $databaseConfiguration;
@@ -244,10 +241,6 @@ class EnolaContext {
         $this->sessionAutostart= $config['session_autostart'];
         //AUTHORIZATION_FILE: Indica el archivo que contiene la configuracion de autorizacion
         $this->authorizationFile= $config['authorization_file'];
-        //AUTOLOAD_FILE: Indica la direccion del archivo autoload de composer
-        if(isset($config['composer']['autoload_file'])){
-            $this->composerAutoload= $config['composer']['autoload_file'];
-        }
         //CONFIG_BD: archivo de configuracion para la base de datos
         if(isset($config['database']) && $config['database'] != ''){
             $this->databaseConfiguration= $config['database'];
@@ -262,7 +255,7 @@ class EnolaContext {
         }
         
         //Diferentes definiciones
-        $this->librariesDefinition= $config['libraries'];
+        $this->librariesDefinition= $config['libs'];
         $this->dependenciesFile= $config['dependency_injection'];
         $this->controllersFile= $config['controllers'];
         $this->filtersBeforeDefinition= $config['filters'];
@@ -387,9 +380,6 @@ class EnolaContext {
     }
     public function getCacheConfigFiles(){
         return $this->cacheConfigFiles;
-    }
-    public function getComposerAutoload(){
-        return $this->composerAutoload;
     }
     public function getDatabaseConfiguration(){
         return $this->databaseConfiguration;
@@ -533,16 +523,6 @@ class EnolaContext {
      */
     public function isDatabaseDefined(){
         if($this->databaseConfiguration != NULL){
-            return TRUE;
-        }
-        return FALSE;
-    }
-    /**
-     * Retorna si se definio e archivo autoload de composer
-     * @return boolean
-     */
-    public function isAutoloadDefined(){
-        if($this->composerAutoload != NULL){
             return TRUE;
         }
         return FALSE;
