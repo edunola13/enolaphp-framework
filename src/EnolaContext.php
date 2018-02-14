@@ -484,7 +484,7 @@ class EnolaContext {
         $realConfig= NULL;
         $folder != null ?: $folder= $this->pathApp . $this->configurationFolder;
         if($this->configurationType == 'YAML'){
-            $realConfig = Spyc::YAMLLoad($folder . $name . '.yml');            
+            $realConfig = \Spyc::YAMLLoad($folder . $name . '.yml');            
         }else if($this->configurationType == 'PHP'){
             include $folder . $name . '.php';
             //La variable $config la define cada archivo incluido
@@ -503,7 +503,7 @@ class EnolaContext {
     public function readFileSpecific($path, $extension = 'yml'){
         $realConfig= NULL;
         if($extension == 'yml'){
-            $realConfig = Spyc::YAMLLoad($path);            
+            $realConfig = \Spyc::YAMLLoad($path);            
         }else if($extension == 'php'){
             include $path;
             //La variable $config la define cada archivo incluido

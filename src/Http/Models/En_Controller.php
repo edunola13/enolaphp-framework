@@ -1,5 +1,5 @@
 <?php
-namespace Enola\Http;
+namespace Enola\Http\Models;
 use Enola\Support\Generic\GenericLoader;
 
 /**
