@@ -22,7 +22,7 @@ class En_CronController extends GenericLoader{
      */
     function __construct(){
         parent::__construct('cron');
-        $this->viewFolder= $this->context->getPathApp() . 'source/view/';
+        $this->viewFolder= $this->context->getPathApp() . 'src/view/';
     }
     /**
      * Funcion que actua cuando acurre un error en la validacion

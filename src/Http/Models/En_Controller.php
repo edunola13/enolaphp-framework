@@ -26,7 +26,7 @@ class En_Controller extends GenericLoader implements Controller{
      */
     function __construct(){
         parent::__construct('controller');
-        $this->viewFolder= $this->context->getPathApp() . 'source/view/';
+        $this->viewFolder= $this->context->getPathApp() . 'src/view/';
     }  
 
     /**

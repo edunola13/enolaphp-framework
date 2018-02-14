@@ -164,7 +164,7 @@ class ComponentCore{
     protected function buildDir($definition, $folder="components"){
         $dir= "";
         if(! isset($definition['location'])){
-            $dir= $this->app->context->getPathApp() . 'source/' . $folder . '/' . $definition['class'] . '.php';
+            $dir= $this->app->context->getPathApp() . 'src/' . $folder . '/' . $definition['class'] . '.php';
         }else{
             $dir= $this->app->context->getPathRoot() . $definition['location'] . '/' . $definition['class'] . '.php';
         }

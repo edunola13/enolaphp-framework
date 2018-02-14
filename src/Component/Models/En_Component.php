@@ -25,7 +25,7 @@ class En_Component extends GenericLoader implements Component{
      */
     public function __construct() {        
         parent::__construct('component');
-        $this->viewFolder= $this->context->getPathApp() . 'source/view/';
+        $this->viewFolder= $this->context->getPathApp() . 'src/view/';
     }    
     /**
      * Realiza el renderizado del componente

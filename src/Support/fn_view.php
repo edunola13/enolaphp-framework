@@ -16,7 +16,7 @@ function includeView($view, $params = NULL){
             $$key= $value;
         }
     }
-    $dir= PATHAPP . 'source/view/' . $view . '.php';
+    $dir= PATHAPP . 'src/view/' . $view . '.php';
     include $dir;
 }
 /**

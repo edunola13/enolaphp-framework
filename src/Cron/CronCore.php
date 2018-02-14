@@ -96,7 +96,7 @@ class CronCore{
      * @param array $propertiesEsp
      */
     public function executeCron($cron, $method= "index", $propertiesEsp= NULL){
-        $dir= PATHAPP . 'source/crons/' . $cron . '.php';
+        $dir= PATHAPP . 'src/crons/' . $cron . '.php';
         //Analiza si existe el archivo
         if(file_exists($dir)){
             $cronIns= $this->instanceClass($dir, $cron, $propertiesEsp);
