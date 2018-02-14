@@ -100,12 +100,25 @@ class Application{
      * sin importar el tipo de requerimiento (HTTP, COMPONENT, CLI, Etc).
      */
     private function init(){
+        //Load Archivos de Funciones
+        $this->loadFunctionsFiles();
         //Instancio el sistema de Cache
         $this->cache= new Cache\Cache();
         //EnolaContext->init(): Cargo las configuraciones de contexto faltante
         $this->context->init();
         //Instancio el motor de Dependencias
         $this->dependenciesEngine= new Support\DependenciesEngine();     
+    }
+    /**
+     * Carga de modulos de soporte para que el framework trabaje correctamente
+     */ 
+    protected function loadFunctionsFiles(){           
+        //Carga del modulo errores - se definen manejadores de errores
+        require $this->context->getPathFra() . 'Support/fn_error.php';    
+        //Carga de modulo para carga de archivos
+        require $this->context->getPathFra() . 'Support/fn_load_files.php';      
+        //Carga el modulo de funciones de vista exportadas al usuario de manera simple
+        require $this->context->getPathFra() . 'Support/fn_view.php';
     }
     /**
      * Carga e inicializa el modulo HTTP
