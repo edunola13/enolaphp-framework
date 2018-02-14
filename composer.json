@@ -23,6 +23,5 @@
         "psr-4": {
             "Enola\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
