@@ -121,7 +121,11 @@ class CronCore{
         $dir= PATHFRA . 'Commands/' . $shell . '.php';
         //Analiza si existe el archivo
         if(file_exists($dir)){
-            $shellIns= $this->instanceClass($dir, $shell, $propertiesEsp);
+            $class= "Enola\\Commands\\" . $shell;
+            $shellIns= new $class();
+            if($propertiesEsp != NULL){
+                $this->app->dependenciesEngine->injectProperties($shellIns, $propertiesEsp);
+            }
             //Analiza si existe el metodo indicado
             if(method_exists($shellIns, $method)){
                 $shellIns->$method($this->cronRequest, $this->cronResponse);                

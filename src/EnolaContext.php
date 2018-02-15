@@ -456,7 +456,7 @@ class EnolaContext {
      */
     public function compileConfigurationFile($file){
         //CARGAMOS LA DEPENDENCIA POR SI ES NECESARIA
-        require_once $this->pathFra . 'supportModules/Spyc.php';
+        require_once $this->pathFra . 'Support/Spyc.php';
         
         $info= new \SplFileInfo($file);
         $path= $info->getPath() . '/';
