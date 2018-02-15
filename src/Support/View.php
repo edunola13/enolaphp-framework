@@ -180,7 +180,7 @@ class View{
         $this->fileName= $file;
         $this->i18nContent= NULL;
         if($locale != NULL){
-            if(file_exists(PATHAPP . 'source/content/' . $file . "_$locale" . '.txt')){
+            if(file_exists(PATHAPP . 'src/content/' . $file . "_$locale" . '.txt')){
                 $this->i18nContent= \E_fn\load_application_file('src/content/' . $file . "_$locale" . '.txt');
                 $this->i18nContent= \E_fn\parse_properties($this->i18nContent);
                 $this->locale= $locale;

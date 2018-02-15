@@ -17,8 +17,12 @@ trait GenericBehavior {
      * @param string $lib
      * @return bool
      */
-    protected function validate($var, $locale = NULL, $lib= '\Enola\Lib\ValidationFields'){
+    protected function validate($var, $locale = NULL, $lib= '\Enola\Lib\Validation\ValidationFields', $dir= null){
         $validation= new $lib($locale);
+        if($dir == null){
+            $dir= PATHAPP . 'src/content/messages';
+        }
+        $validation->dir_content= $dir;
         $reglas= $this->configValidation();
         if(is_object($var)){
             $reflection= new Reflection($var);
