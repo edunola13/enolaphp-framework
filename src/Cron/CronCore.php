@@ -118,7 +118,7 @@ class CronCore{
      * @param array $propertiesEsp
      */
     public function executeShellScript($shell, $method= "index", $propertiesEsp= NULL){
-        $dir= PATHFRA . 'src/Commands/' . $shell . '.php';
+        $dir= PATHFRA . 'Commands/' . $shell . '.php';
         //Analiza si existe el archivo
         if(file_exists($dir)){
             $shellIns= $this->instanceClass($dir, $shell, $propertiesEsp);
