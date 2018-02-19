@@ -31,7 +31,7 @@ class Error{
     public static function error_404(){
         $head= '404 Pagina no Encontrada';
         $message= 'La pagina que solicitaste no existe';
-        Http\UrlUri::setEstadoHeader(404);
+        UrlUri::setEstadoHeader(404);
         include PATHAPP . 'errors-info/error_404.php';
         exit;
     }    
@@ -82,7 +82,6 @@ class Error{
         if($enolaError){
             //Cargo el archivo con los errores
             $errores= UrlUri::httpStates();
-            $errores= parse_properties($errores);
             //Escribo el Log
             self::write_log('error_http', $errores[$enolaError]);
             //Muestro el error correspondiente

@@ -1,6 +1,7 @@
 <?php
 namespace Enola\Support;
 use Enola\Support\Error;
+use Enola\Http\UrlUri;
 /*
  * Este modulo Maneja los errores de la aplicacion
  * Contiene tambien la seccion de Informacion del Framework hacia el usuario
@@ -26,7 +27,7 @@ function _error_handler($level, $message, $file, $line){
     switch ($level) {
         case E_USER_ERROR:
             Error::error_php('Error', $level, $message, $file, $line);
-            if(ENOLA_MODE == 'HTTP'){Http\UrlUri::setEstadoHeader(500);}
+            if(ENOLA_MODE == 'HTTP'){UrlUri::setEstadoHeader(500);}
             exit(1);
             break;
 
@@ -60,7 +61,7 @@ function _shutdown(){
             else{
                 Error::error_php('Error Fatal - Parse - Strict', $e['type'], $e['message'], $e['file'], $e['line']);
             }
-            if(ENOLA_MODE == 'HTTP'){Http\UrlUri::setEstadoHeader(500);}
+            if(ENOLA_MODE == 'HTTP'){UrlUri::setEstadoHeader(500);}
         }
     }
 }
