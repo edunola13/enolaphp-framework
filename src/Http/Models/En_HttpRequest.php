@@ -45,6 +45,9 @@ class En_HttpRequest extends Request{
     /** HTTP User Agent
      * @var string */
     public $httpUserAgent;
+    /** IP of Client
+     * @var string */
+    public $clientIp;
     //Propias del Framework
     /** Base URL de la aplicacion
      * @var string */
@@ -90,6 +93,7 @@ class En_HttpRequest extends Request{
         $this->httpAccept= filter_input(INPUT_SERVER, 'HTTP_ACCEPT');
         $this->httpAcceptLanguage= filter_input(INPUT_SERVER, 'HTTP_ACCEPT_LANGUAGE');
         $this->httpUserAgent= filter_input(INPUT_SERVER, 'HTTP_USER_AGENT');
+        $this->clientIp= filter_input(INPUT_SERVER, 'REMOTE_ADDR');
         //Configuro la URIAPP y defino varios valores propios de la Aplicación        
         $this->realBaseUrl= $config['REAL_BASE_URL'];
         $this->baseUrlLocale= $config['BASEURL_LOCALE'];

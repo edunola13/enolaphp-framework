@@ -3,6 +3,7 @@
     "description": "Framework Enola PHP.",
     "keywords": ["framework", "enolaphp"],
     "license": "MIT",
+    "version": "1.0.3",
     "support": {
         "issues": "https://github.com/edunola13/enolaphp-framework/issues",
         "source": "https://github.com/edunola13/enolaphp-framework"
