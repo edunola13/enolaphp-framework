@@ -131,7 +131,7 @@ class EnolaContext {
      * @param string $path_framework
      * @param string $path_application
      */
-    public function __construct($path_root, $path_framework, $path_application, $configurationType, $configurationFolder, $charset, $timeZone, $multiDomain, $configFiles, $cache) {
+    public function __construct($path_root, $path_framework, $path_application, $configurationType, $configurationFolder, $charset, $timeZone, $multiDomain, $folderDomain, $configFiles, $cache) {
         //Librarie to YAML if it's necessary
         if($configurationType == 'YAML'){
             require $path_framework . 'Support/Spyc.php';
