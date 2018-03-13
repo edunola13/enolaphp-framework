@@ -11,7 +11,7 @@ use Enola\EnolaContext;
  */
 abstract class GenericLoader {
     /** Referencia al contexto de la aplicacion 
-     * @var \EnolaContext */
+     * @var EnolaContext */
     protected $context;
     /**
      * Constructor que realiza la carga inicial
