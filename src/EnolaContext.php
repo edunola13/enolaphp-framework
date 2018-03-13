@@ -68,6 +68,9 @@ class EnolaContext {
     /** Dominio de la App
      * @var string */
     private $domain;
+    /** Prefijo para carpetas donde se guarda informacion de cada dominio
+     * @var string */
+    private $folderDomain;
     /** Archivos de configuracion por dominio
      * @var mixed */
     private $configFiles= array();
@@ -157,6 +160,8 @@ class EnolaContext {
         //DOMAIN: Dominio de la App
         $this->domain= filter_input(INPUT_SERVER, 'SERVER_NAME');
         if($this->multiDomain){
+            //FOLDER_DOMAIN: Indica prefijo para las carpetas de configuracion por dominio
+            $this->folderDomain= $folderDomain;
             $this->configFiles= $configFiles;
         }
         //Guardo la instancia para qienes quieran consultar desde cualqueir ubicacion
@@ -189,11 +194,12 @@ class EnolaContext {
         //Seleccion el archivo de configuracion correspondiente segun el MODO y el DOMINIO
         if($this->multiDomain){
             if(ENOLA_MODE == 'HTTP'){
-                $file= $this->getConfigFile($this->domain);
-            }else{
-                reset($this->configFiles);
-                $file= next($this->configFiles);
-            }
+                $file= $this->getConfigFile();
+            }//else{
+                //POR AHORA TODOS LOS CRON TRABAJAN CON ARCHIVO DE CONFIGURACION POR DEFECTO
+                //reset($this->configFiles);
+                //$file= next($this->configFiles);
+            //}
         }
         $config= $this->readConfigurationFile($file);
         //Define si muestra o no los errores y en que nivel de detalle dependiendo en que fase se encuentre la aplicacion
@@ -349,19 +355,29 @@ class EnolaContext {
     public function getMultiDomain(){
         return $this->multiDomain;
     }
+    public function getFolderDomain(){
+        return $this->folderDomain;
+    }
     public function getDomain(){
         return $this->domain;
     }
     public function getConfigFiles(){
         return $this->configFiles;
     }
-    public function getConfigFile($domain){
-        if(isset($this->configFiles[$domain])){
-            return $this->configFiles[$domain];
-        }else{
-            return $domain;
+    public function getConfigFolderDomain(){
+        if($this->multiDomain){
+            if(isset($this->configFiles[$this->domain])){
+                return $this->folderDomain . $this->configFiles[$this->domain] . '/';
+            }
+            return $this->folderDomain . $this->domain . '/';
         }
-        return NULL;
+        return null;
+    }
+    public function getConfigFile(){
+        if($this->multiDomain){
+            return $this->getConfigFolderDomain() . 'config';
+        }
+        return 'config';
     }
     public function getConfigurationType(){
         return $this->configurationType;
