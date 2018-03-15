@@ -100,7 +100,7 @@ class HttpCore{
                     $mapController['namespace']= isset($parentController['namespace']) ? $parentController['namespace'] : NULL;
                 }
                 if(isset($parentController['properties'])){
-                    $mapController['properties']= array_merge($mapController['properties'], $parentController['properties']);
+                    $mapController['properties']= array_merge($parentController['properties'], $mapController['properties']);
                 }
             }
             
