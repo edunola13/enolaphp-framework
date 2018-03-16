@@ -20,7 +20,10 @@ class CronCore{
     public $cronRequest;
     /** Referencia al Response actual 
      * @var Response */
-    public $cronResponse;    
+    public $cronResponse;
+    /** Contiene los datos de entrada que son importante para el framework
+     * @var mixed */
+    public $data= array('domain' => null, 'class' => null, 'method' => null);
     /** 
      * Se instancia el nucleo.
      * Se definen los parametros y se define el Cron Request actual
@@ -39,7 +42,7 @@ class CronCore{
      * Este es la funcion principal y define el flujo que va a seguir la peticion: CronManagement, CronDesdeComandos, ShellScript
      */
     public function executeCronController(){
-        $class= $this->cronRequest->getParamAll(1);
+        $class= $this->data['class'];//$this->cronRequest->getParamAll(1);
         //Analizo si llamo a los controladores del usuario o si llamo al manejador de tareas o shell script del framework
         if($class == 'CronManagement'){
             //Ejecuto el CronManagement
@@ -48,8 +51,9 @@ class CronCore{
         if($class != 'CronManagement'){
             $method= "index";
             //Si la diferencia es mayor a 2 entre ambos arreglos de parametros quiere decir que se indico el nombre del metodo
-            if(count($this->cronRequest->getAllParams()) - count($this->cronRequest->getParams()) > 2){
-                $method= $this->cronRequest->getParamAll(2);
+            //if(count($this->cronRequest->getAllParams()) - count($this->cronRequest->getParams()) > 2){
+            if($this->data['method'] != null){
+                $method= $this->data['method'];
             }
             //Ejecuto Cron de Usuario o Shell Script del Framework
             if(strpos($class, 'Eno-') === 0){
@@ -149,23 +153,50 @@ class CronCore{
         $realParams= array();
         //Va a contener los parametros reales. Los no usados por el framework
         $cleanParams= array();
+        //CONSIGO LOS PARAMETROS REALES
         $indActual= 0;
         foreach ($params as $value) {
             //Le quito los guiones iniciales a todos
             $value= ltrim($value, '-');
-            //Analizo si debo guardar en cleanParams
-            if($indActual == 2 && substr($value, 0, 1) == '?'){
+            if(($indActual == 2 || $indActual == 3) && substr($value, 0, 1) == '?'){
                 //Le quito el "?"
                 $value= substr($value, 1);
-            }else if($indActual >= 2){
-                //Guardo los parametros que no usa el framework
-                $cleanParams[]= $value;
+                $this->data['method']= $value;
             }
             //Guardo a todos en realParams
             $realParams[]= $value;
             //Aumento el indice
             $indActual++;
         }
+        //CONSIGO LOS PARAMETROS LIMPIOS, QUE NO USA EL FRAMEWORK
+        $posSlice= strpos($params[1], 'domain=') ? 3 : 2;
+        $indActual= 0;
+        foreach (array_slice($params, $posSlice) as $value) {
+            //Le quito los guiones iniciales a todos
+            $value= ltrim($value, '-');
+            //Analizo si debo guardar en cleanParams
+            if($indActual == 0 && substr($value, 0, 1) == '?'){
+                //Le quito el "?"
+                $value= substr($value, 1);
+            }else{
+                //Guardo los parametros que no usa el framework
+                $cleanParams[]= $value;
+            }
+            //Aumento el indice
+            $indActual++;
+        }        
+        
+        //ANALIZO DATOS PARA EL CORE
+        if(strpos($params[1], 'domain=') !== false){
+            $pos= strpos($params[1], 'domain=');
+            $this->data['domain']= substr($params[1], $pos + 7);
+        }
+        if(strpos($params[1], 'domain=') === false){
+            $this->data['class']= ltrim($params[1], '-');
+        }else{
+            $this->data['class']= ltrim($params[2], '-');
+        }
+        
         return array("real" => $realParams, "clean" => $cleanParams);
     }
     private function validInterval($frequencyMin, $min){

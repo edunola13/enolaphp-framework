@@ -158,7 +158,17 @@ class EnolaContext {
         //MULTI_DOMAIN: Indica si se soporta multiple dominios
         $this->multiDomain= $multiDomain;
         //DOMAIN: Dominio de la App
-        $this->domain= filter_input(INPUT_SERVER, 'SERVER_NAME');
+        if(ENOLA_MODE == 'HTTP'){
+            $this->domain= filter_input(INPUT_SERVER, 'SERVER_NAME');
+            $this->domain= str_replace('www.', '', $this->domain);
+        }else{
+            //Consigo las variables globales para linea de comandos
+            global $argv;
+            if(strpos($argv[1], 'domain=') !== false){
+                $pos= strpos($argv[1], 'domain=');
+                $this->domain= substr($argv[1], $pos + 7);
+            }
+        }
         if($this->multiDomain){
             //FOLDER_DOMAIN: Indica prefijo para las carpetas de configuracion por dominio
             $this->folderDomain= $folderDomain;
@@ -192,11 +202,11 @@ class EnolaContext {
     public function init(){
         $file= 'config';
         //Seleccion el archivo de configuracion correspondiente segun el MODO y el DOMINIO
-        if($this->multiDomain){
-            if(ENOLA_MODE == 'HTTP'){
+        if($this->multiDomain && $this->domain){
+            //Ya no importa el modo, se definio todo antes si busca o no por dominio
+            //if(ENOLA_MODE == 'HTTP'){
                 $file= $this->getConfigFile();
-            }//else{
-                //POR AHORA TODOS LOS CRON TRABAJAN CON ARCHIVO DE CONFIGURACION POR DEFECTO
+            //}else{
                 //reset($this->configFiles);
                 //$file= next($this->configFiles);
             //}
