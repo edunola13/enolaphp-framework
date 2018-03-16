@@ -381,7 +381,7 @@ class EnolaContext {
             }
             return $this->folderDomain . $this->domain . '/';
         }
-        return null;
+        return '';
     }
     public function getConfigFile(){
         if($this->multiDomain){

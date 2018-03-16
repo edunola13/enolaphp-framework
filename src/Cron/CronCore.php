@@ -77,8 +77,9 @@ class CronCore{
             'd' => $dateTime->format('d'),
             'm' => $dateTime->format('m'),
             'w' => $dateTime->format('w')
-        );        
-        $definedCrons= $this->app->context->readConfigurationFile('cronJobs')['crons'];
+        );
+        $file= $this->app->context->getConfigFolderDomain() . 'cronJobs';
+        $definedCrons= $this->app->context->readConfigurationFile($file)['crons'];
         $cronsToExeture= array();
         foreach ($definedCrons as $cronEsp) {
             $frecuenciaActiva= $this->activeFrequency($cronEsp['frequency'], $actualFrequency);
