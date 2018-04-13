@@ -112,7 +112,6 @@ trait GenericBehavior {
     }
     /**
      * Inyecta las dependencias que tienen seteado el tipo en load_in
-     * @param \Enola\Application $app
      * @param string $type
      */
     protected function injectDependencyOfType($type){
@@ -120,7 +119,6 @@ trait GenericBehavior {
     }
     /**
      * Carga las dependencias indicadas en la instancia actual en las propiedades correspondientes
-     * @param \Enola\Application $app
      * @param array $dependencies / property => dependency
      */
     protected function injectDependencies(array $dependencies){
@@ -128,7 +126,7 @@ trait GenericBehavior {
     }
     /**
      * Carga la dependencias indicada en la instancia actual en la propiedad indicada
-     * @param \Enola\Application $app
+     * @param string $propertyName
      * @param string $dependencyName
      */
     protected function injectDependency($propertyName, $dependencyName){
@@ -137,6 +135,7 @@ trait GenericBehavior {
 
     /**
      * Devuelve la instancia creada automaticamente por el framework en su carga
+     * @param string $var
      * @return EnolaContext
      */
     protected function vars($var = null){
