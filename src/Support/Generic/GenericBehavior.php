@@ -1,6 +1,7 @@
 <?php
 namespace Enola\Support\Generic;
 
+use Enola\EnolaContext;
 /**
  * Esta trait contiene comportamiento comun que es utilizado por los diferentes controladores de los diferentes modulos 
  * como el controller http, el component o el controller cron. Ademas se puede utilizar en la clase que el usuario desee
@@ -111,26 +112,36 @@ trait GenericBehavior {
     }
     /**
      * Inyecta las dependencias que tienen seteado el tipo en load_in
-     * @param \Enola\Application $app
      * @param string $type
      */
-    protected function injectDependencyOfType(\Enola\Application $app, $type){
-        $app->dependenciesEngine->injectDependencyOfType($this,$type);
+    protected function injectDependencyOfType($type){
+        EnolaContext::getInstance()->app->dependenciesEngine->injectDependencyOfType($this,$type);
     }
     /**
      * Carga las dependencias indicadas en la instancia actual en las propiedades correspondientes
-     * @param \Enola\Application $app
      * @param array $dependencies / property => dependency
      */
-    protected function injectDependencies(\Enola\Application $app, array $dependencies){
-        $app->dependenciesEngine->injectDependencies($this,$dependencies);
+    protected function injectDependencies(array $dependencies){
+        EnolaContext::getInstance()->app->dependenciesEngine->injectDependencies($this,$dependencies);
     }
     /**
      * Carga la dependencias indicada en la instancia actual en la propiedad indicada
-     * @param \Enola\Application $app
+     * @param string $propertyName
      * @param string $dependencyName
      */
-    protected function injectDependency(\Enola\Application $app, $propertyName, $dependencyName){
-        $app->dependenciesEngine->injectDependency($this,$propertyName,$dependencyName);
+    protected function injectDependency($propertyName, $dependencyName){
+        EnolaContext::getInstance()->app->dependenciesEngine->injectDependency($this,$propertyName,$dependencyName);
+    }
+
+    /**
+     * Devuelve la instancia creada automaticamente por el framework en su carga
+     * @param string $var
+     * @return EnolaContext
+     */
+    protected function vars($var = null){
+        if(is_null($var)){
+            return EnolaContext::getInstance()->getContextVars();
+        }
+        return EnolaContext::getInstance()->getContextVar($var);
     }
 }
