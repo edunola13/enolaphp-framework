@@ -216,4 +216,16 @@ class En_HttpRequest extends Request{
         }
         return $var;
     }
+
+    /**
+     * Retorna el body de la peticion JSON
+     * 
+     * @return Json
+     */
+    public function getBody(){
+        $json = file_get_contents('php://input');
+        $data= json_decode($json, TRUE);
+
+        return $data;
+    }
 }
