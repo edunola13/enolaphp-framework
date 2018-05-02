@@ -1,6 +1,7 @@
 <?php
 namespace Enola\Http\Models;
 use Enola\Support\Generic\Response;
+use Enola\Http\UrlUri;
 
 /**
  * Esta clase representa una respuesta HTTP y por lo tanto provee todas las propiedades basicas de una respuesta HTTP como

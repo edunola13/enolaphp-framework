@@ -2,6 +2,7 @@
 namespace Enola\Http\Models;
 use Enola\Support\Generic\Request;
 use Enola\Support\Security;
+use Enola\Support\DependencyEngine\Reflection;
 
 /**
  * Esta clase representa una solicitud HTTP y por lo tanto provee todas las propiedades basicas de una peticion HTTP como
@@ -204,7 +205,7 @@ class En_HttpRequest extends Request{
         }
         if($class != NULL && $vars){
             $object= new $class();
-            $reflection= new \Enola\Support\Reflection($object);
+            $reflection= new Reflection($object);
             foreach ($vars as $key => $value) {
                 $reflection->setProperty($key, $value);
             }
