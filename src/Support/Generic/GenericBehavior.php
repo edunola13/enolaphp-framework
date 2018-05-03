@@ -14,24 +14,27 @@ trait GenericBehavior {
      * Valida las variables de un objeto o de un array en base a una definicion de configuracion de validacion
      * Se puede utilizar la libreria que se desee pere debe respetar la inerfaz de la proporcionada por el framework.
      * @param type $var
+     * @param array $ruleset
      * @param string $locale
      * @param string $lib
      * @return bool
      */
-    protected function validate($var, $locale = NULL, $lib= '\Enola\Lib\Validation\ValidationFields', $dir= null){
+    protected function validate($var, $ruleset = null, $locale = null, $lib= '\Enola\Lib\Validation\ValidationFields', $dir= null){
         $validation= new $lib($locale);
         if($dir == null){
             $dir= PATHAPP . 'src/content/messages';
         }
         $validation->dir_content= $dir;
-        $reglas= $this->configValidation();
+        
+        $ruleset= $ruleset != null ? $ruleset : $this->configValidation();
+        
         if(is_object($var)){
             $reflection= new Reflection($var);
-            foreach ($reglas as $key => $regla) {
+            foreach ($ruleset as $key => $regla) {
                 $validation->add_rule($key, $reflection->getProperty($key), $regla);
             }
         }else{
-            foreach ($reglas as $key => $regla) {
+            foreach ($ruleset as $key => $regla) {
                 $field= isset($var[$key]) ? $var[$key] : NULL;
                 $validation->add_rule($key, $field, $regla);
             }
@@ -48,6 +51,7 @@ trait GenericBehavior {
      * Devuelve la configuracion de validacion
      * Deberia ser sobrescrita por la clase que desee validar, si no, no validara nada.
      * @return array
+     * @deprecated since version 1.1.4
      */
     protected function configValidation(){
         return array();
