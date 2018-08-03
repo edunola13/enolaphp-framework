@@ -91,33 +91,6 @@ class View{
         return $this->request->baseUrlLocale . $internalUri;
     }
     /**
-     * Arma una url para renderizar un componente
-     * @param string $component
-     * @param string $params
-     * @param string $locale
-     * @return string 
-     */
-    function urlComponentFor($component, $params = "", $locale = NULL){
-        $params= '/' . ltrim($params, '/');
-        $url_component= $this->context->getComponentUrl();
-        if($locale == NULL)return $this->request->realBaseUrl . $url_component . '/' . $component . $params;
-        else return $this->request->realBaseUrl . $locale . '/' . $url_component . '/' . $component . $params;
-    }
-    /**
-     * Arma un url para ejecutar una accion de un componente
-     * @param string $component
-     * @param string $action
-     * @param string $params
-     * @param string $locale
-     * @return string 
-     */
-    function urlComponentActionFor($component, $action, $params = "", $locale = NULL){
-        $params= '/' . ltrim($params, '/');
-        $url_component= $this->context->getComponentUrl();
-        if($locale == NULL)return $this->request->realBaseUrl . $url_component . '/' . $component . '/actionComponent/' . $action . $params;
-        else return $this->request->realBaseUrl . $locale . '/' . $url_component . '/' . $component . '/actionComponent/' . $action . $params;
-    }
-    /**
      * Retorna el locale actual.
      * En caso de que el locale este indicado en la URL sera igual a locale_uri, si no sera igual al locale definido por defecto.
      * @return string
@@ -149,27 +122,7 @@ class View{
      */
     function replaceSpaces($string){
         return str_replace(" ", "-", $string);
-    }    
-    /**
-     * Ejecuta un componente en base la especificacion indicada
-     * @param string $name
-     * @param array $params
-     * @param string action
-     * @param bool $buffer
-     * @return void - string
-     */
-    function component($name, $params = NULL, $action = NULL, $buffer = FALSE){
-        if($buffer){
-            ob_start();            
-        }
-        //Llama a la funcion que ejecuta el componente definido en el modulo Componente
-        $this->app->componentCore->executeComponent($name, $params, $action);
-        if($buffer){
-            $output = ob_get_contents();
-            ob_end_clean();
-            return $output;
-        }
-    }    
+    }
     /**
      * Carga un archivo de internacionalizacion. Si no se especifica el locale carga el archivo por defecto, si no
      * le agrega el locale pasado como parametro
