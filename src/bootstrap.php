@@ -11,8 +11,5 @@ $context= new EnolaContext($path_root, $path_framework, $path_application, $conf
 //Una vez realizada la carga de la configuracion empieza a trabajar el core del Framework
 $app= new Application($context);
 
-//Seteo el caluclo de la performance, si corresponde
-$app->initPerformance($timeBegin);
-
 //Ejecuto el requerimiento actual
 $app->request();

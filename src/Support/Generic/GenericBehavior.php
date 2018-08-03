@@ -4,7 +4,7 @@ namespace Enola\Support\Generic;
 use Enola\EnolaContext;
 /**
  * Esta trait contiene comportamiento comun que es utilizado por los diferentes controladores de los diferentes modulos 
- * como el controller http, el component o el controller cron. Ademas se puede utilizar en la clase que el usuario desee
+ * como el controller http o el controller cron. Ademas se puede utilizar en la clase que el usuario desee
  * si necesita el comportamiento aca definido.
  * @author Eduardo Sebastian Nola <edunola13@gmail.com>
  * @category Enola\Support
@@ -82,27 +82,7 @@ trait GenericBehavior {
             ob_end_clean();
             return $output;
         }
-    }
-    /**
-     * Realiza un llamado al componente indicado con las configuracion especificada
-     * @param string $name
-     * @param array $params
-     * @param string $action
-     * @param bool $buffer
-     * @return string - void
-     */
-    protected  function component($name, $params = NULL, $action = NULL, $buffer = FALSE){
-        if($buffer){
-            ob_start();            
-        }
-        //Llama a la funcion que ejecuta el componente definido en el modulo Componente
-        $this->context->app->componentCore->executeComponent($name, $params, $action);
-        if($buffer){
-            $output = ob_get_contents();
-            ob_end_clean();
-            return $output;
-        }  
-    }
+    }    
     /**
      * Carga la instancia de una clase pasada como parametro en una variable del objeto actual con el nombre indicado
      * @param string $class

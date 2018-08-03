@@ -40,9 +40,6 @@ class EnolaContext {
     /** Archivo index de la aplicacion
      * @var string */
     private $indexPage;
-    /** Direccion relativa sobre la que funcionan sobre los componentes via URL
-     * @var string */
-    private $componentUrl;
     /** Nombre de la variable de sesion que contiene el perfil del usuario
      * @var string */
     private $sessionProfile;
@@ -50,9 +47,6 @@ class EnolaContext {
     /** Nivel de errores a controlar
      * @var string */
     private $error;
-    /** Indica si calcula la performance de la aplicacion
-     * @var string */
-    private $calculatePerformance;
     /** Ambiente actual de la aplicacion
      * @var string */
     private $environment;
@@ -114,9 +108,6 @@ class EnolaContext {
     /** Definicion de filtros post procesamiento
      * @var string */
     private $filtersAfterDefinition;
-    /** Definicion de componentes
-     * @var string */
-    private $componentsDefinition;
     //I18n
     /** Locale por defecto de la aplicacion
      * @var string */
@@ -238,17 +229,13 @@ class EnolaContext {
         }
         $this->relativeUrl= $config['relative_url'];
         //INDEX_PAGE: Pagina inicial. En blanco si se utiliza mod_rewrite
-        $this->indexPage= $config['index_page']; 
-        //URL_COMPONENT: URL con la cual se deben mapear los componentes via URL
-        $this->componentUrl= trim($config['url-components'], '/');
+        $this->indexPage= $config['index_page'];
         //SESSION_PROFILE: Setea la clave en la que se guarda el profile del usuario
         $this->sessionProfile= "";
         if(isset($config['session-profile'])){
             $this->sessionProfile= $config['session-profile'];
         }
         
-        //CALCULATE_PERFORMANCE: Indica si el framework debe calcular el tiempo de respuesta o no
-        $this->calculatePerformance= $config['calculate_performance'];
         //ENVIRONMENT: Indica el ambiente de la aplicacion
         $this->environment= $config['environment'];
         //AUTHENTICATION: Indica el metodo de autenticacion de la aplicacion
@@ -271,12 +258,11 @@ class EnolaContext {
         }
         
         //Diferentes definiciones
-        $this->librariesDefinition= $config['libs'];
+        $this->librariesDefinition= isset($config['libs']) ? $config['libs'] : [];
         $this->dependenciesFile= $config['dependency_injection'];
         $this->controllersFile= $config['controllers'];
         $this->filtersBeforeDefinition= $config['filters'];
         $this->filtersAfterDefinition= $config['filters_after_processing'];
-        $this->componentsDefinition= $config['components'];
         
         if(isset($config['vars'])){
             $this->contextVars= $config['vars'];
@@ -341,9 +327,6 @@ class EnolaContext {
     public function getIndexPage(){
         return $this->indexPage;
     }
-    public function getComponentUrl(){
-        return $this->componentUrl;
-    }
     public function getSessionProfile(){
         return $this->sessionProfile;
     }
@@ -352,9 +335,6 @@ class EnolaContext {
     }
     public function getEnvironment(){
         return $this->environment;
-    }
-    public function getCalculatePerformance(){
-        return $this->calculatePerformance;
     }
     public function getCharset(){
         return $this->charset;
@@ -433,9 +413,6 @@ class EnolaContext {
     }
     public function getFiltersAfterDefinition(){
         return $this->filtersAfterDefinition;
-    }
-    public function getComponentsDefinition(){
-        return $this->componentsDefinition;
     }
     public function getI18nDefaultLocale(){
         return $this->i18nDefaultLocale;
@@ -535,13 +512,6 @@ class EnolaContext {
      */
     public function isInProduction(){
         return $this->environment == 'production';
-    }
-    /**
-     * Retorna si se debe o no calcular el tiempo de respuesta
-     * @return boolean
-     */
-    public function CalculatePerformance(){
-        return ($this->calculatePerformance == 'TRUE' || $this->calculatePerformance == 'true');
     }
     /**
      * Retorna si se definicio configuracion de base de datos
