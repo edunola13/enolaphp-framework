@@ -92,7 +92,8 @@ class HttpCore{
                 'namespace' => isset($controller['namespace']) ? $controller['namespace'] : NULL,
                 'class' => isset($controller['class']) ? $controller['class'] : $parentController['class'],
                 'method' => isset($controller['method']) ? $controller['method'] : NULL,
-                'properties' => isset($controller['properties']) ? $controller['properties'] : array()
+                'properties' => isset($controller['properties']) ? $controller['properties'] : array(),
+                'middlewares' => isset($controller['middlewares']) ? $controller['middlewares'] : []
             );
             if($parentController != NULL){
                 if(! isset($controller['class'])){
@@ -101,6 +102,9 @@ class HttpCore{
                 }
                 if(isset($parentController['properties'])){
                     $mapController['properties']= array_merge($parentController['properties'], $mapController['properties']);
+                }
+                if(isset($parentController['middlewares'])){
+                    $mapController['middlewares'] = array_merge($parentController['middlewares'], $mapController['middlewares']);
                 }
             }
             
@@ -157,7 +161,7 @@ class HttpCore{
                         require_once $dir;
                     }else{
                         //Avisa que el archivo no existe
-                        Error::general_error('Controller Error', 'The controller ' . $filter_esp['class'] . ' dont exists');
+                        Error::general_error('Filter Error', 'The filter ' . $filter_esp['class'] . ' dont exists');
                     } 
                 }
                 $filterIns= new $class();
@@ -179,12 +183,61 @@ class HttpCore{
         }
     }
     /**
+     * Se ejecutan los middlewares que se pasan como parametro
+     * @param array[string] $filters
+     * @param string $uriapp
+     */
+    protected function executeMiddlewares($middlewares){
+        //Analizo los filtros y los aplico en caso de que corresponda
+        $middlewaresDefinition = $this->app->context->getMiddlewaresDefinition();
+        foreach ($middlewares as $middlewareName) {
+            if (! isset($middlewaresDefinition[$middlewareName])) {
+                Error::general_error('Middleware Error', 'The middleware ' . $middlewareName . ' dont exists');
+            }
+            
+            $middleware = $middlewaresDefinition[$middlewareName];
+            
+            $dir = $this->buildDir($middleware, 'middlewares');
+            $class = $this->buildClass($middleware);
+            if(!class_exists($class)){
+                //Si la clase no existe intento cargarla
+                if(file_exists($dir)){
+                    require_once $dir;
+                }else{
+                    //Avisa que el archivo no existe
+                    Error::general_error('Middleware Error', 'The middleware ' . $middleware['class'] . ' dont exists');
+                } 
+            }
+            $middlewareIns= new $class();
+            //Analizo si hay parametros en la configuracion
+            if(isset($middleware['properties'])){
+                $this->app->dependenciesEngine->injectProperties($middlewareIns, $middleware['properties']);
+            }
+            //Analiza si existe el metodo filtrar
+            if(method_exists($middlewareIns, 'handle')){
+                $rta= $middlewareIns->handle($this->httpRequest, $this->httpResponse);
+                if($rta === false){
+                    return false;
+                }
+            }
+            else{
+                Error::general_error('Middleware Error', 'The middleware ' . $middleware['class'] . ' dont implement the method handle()');
+            }
+        }
+    }
+    /**
      * Ejecuta el controlador que mapeo anteriormente. Segun su definicion en la configuracion se ejecutara al estilo REST
      * o mediante nombre de funciones
      * @param array $controller_esp 
      * @param string $uriapp
      */
-    protected function executeController($controller_esp, $uriapp = NULL){
+    protected function executeController($controller_esp, $uriapp = NULL) {
+        if (count($controller_esp['middlewares']) > 0) {
+            if ($this->executeMiddlewares($controller_esp['middlewares']) === false) {
+                return;
+            }
+        }
+        
         $dir= $this->buildDir($controller_esp);
         $class= $this->buildClass($controller_esp);
         if(!class_exists($class)){

@@ -102,6 +102,9 @@ class EnolaContext {
     /** Contiene la definicion de todos los controladores
      * @var array */
     private $controllersDefinition;
+    /** Contiene la definicion de todos los middlewares
+     * @var array */
+    private $middlewaresDefinition;
     /** Definicion de filtros pre procesameinto
      * @var string */
     private $filtersBeforeDefinition;
@@ -261,6 +264,7 @@ class EnolaContext {
         $this->librariesDefinition= isset($config['libs']) ? $config['libs'] : [];
         $this->dependenciesFile= $config['dependency_injection'];
         $this->controllersFile= $config['controllers'];
+        $this->middlewaresDefinition= $config['middlewares'];
         $this->filtersBeforeDefinition= $config['filters'];
         $this->filtersAfterDefinition= $config['filters_after_processing'];
         
@@ -407,6 +411,9 @@ class EnolaContext {
             }
         }
         return $this->controllersDefinition;
+    }
+    public function getMiddlewaresDefinition(){
+        return $this->middlewaresDefinition;
     }
     public function getFiltersBeforeDefinition(){
         return $this->filtersBeforeDefinition;
