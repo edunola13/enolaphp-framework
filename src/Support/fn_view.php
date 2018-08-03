@@ -66,28 +66,7 @@ if(ENOLA_MODE == 'HTTP'){
      */
     function urlLocaleFor($internalUri){
         return Ctx::getInstance()->app->view->urlLocaleFor($internalUri);
-    }
-    /**
-     * Arma una url para renderizar un componente
-     * @param string $component
-     * @param string $params
-     * @param string $locale
-     * @return string 
-     */
-    function urlComponentFor($component, $params = "", $locale = NULL){
-        return Ctx::getInstance()->app->view->urlComponentFor($component, $params, $locale);
-    }
-    /**
-     * Arma un url para ejecutar una accion de un componente
-     * @param string $component
-     * @param string $action
-     * @param string $params
-     * @param string $locale
-     * @return string 
-     */
-    function urlComponentActionFor($component, $action, $params = "", $locale = NULL){
-        return Ctx::getInstance()->app->view->urlComponentActionFor($component, $action, $params, $locale);
-    }
+    }    
     /**
      * Retorna el locale actual.
      * En caso de que el locale este indicado en la URL sera igual a locale_uri, si no sera igual al locale definido por defecto.
@@ -121,18 +100,7 @@ function replace($replace, $for, $string){
  */
 function replaceSpaces($string){
     return Ctx::getInstance()->app->view->replaceSpaces($string);
-}    
-/**
- * Ejecuta un componente en base la especificacion indicada
- * @param string $name
- * @param array $params
- * @param string action
- * @param bool $buffer
- * @return void - string
- */
-function component($name, $params = NULL, $action = NULL, $buffer = FALSE){
-    return Ctx::getInstance()->app->view->component($name, $params, $action, $buffer);            
-}    
+}
 /**
  * Carga un archivo de internacionalizacion. Si no se especifica el locale carga el archivo por defecto, si no
  * le agrega el locale pasado como parametro

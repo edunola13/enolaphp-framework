@@ -27,9 +27,6 @@ class Application{
     /** Referencia al nucleo HTTP 
      * @var Http\HttpCore */
     public $httpCore;
-    /** Referencia al nucleo Component 
-     * @var Component\ComponentCore */
-    public $componentCore;
     /** Referencia al nucleo Core 
      * @var Cron\CronCore */
     public $cronCore;
@@ -40,12 +37,6 @@ class Application{
     /** Instancia del motor de dependencias
      * @var Support\DependenciesEngine */
     public $dependenciesEngine;
-    /** Instancia de la clase Performance 
-     * @var Support\Performance */
-    private $performance;
-    /** Indica si se muestra o no el calculo realizado
-     * @var boolean TRUE (default)*/
-    private $showPerformance= TRUE;
     /**
      * Constructor - Ejecuta metodo init
      * @param EnolaContext $context
@@ -54,16 +45,9 @@ class Application{
         $this->context= $context;
         $this->context->app= $this;
         $this->init();
-    }
+    }   
     /**
-     * Destructor - Termina el calculo de performance
-     */
-    public function __destruct() {
-        //Termino e imprimo el calculo de la performance, si corresponde
-        $this->displayPerformance();
-    }    
-    /**
-     * Responde al requerimiento analizando el tipo del mismo, HTTP,CLI,COMPONENT,ETC.
+     * Responde al requerimiento analizando el tipo del mismo, HTTP,CLI,ETC.
      */
     public function request(){        
         //Cargo el modulo correspondiente en base al tipo de requerimiento
@@ -73,23 +57,15 @@ class Application{
         }else{
             //Cargo el modulo Cron
             $this->loadCronModule();
-        }
-        //Cargo el modulo Component
-        $this->loadComponentModule();        
+        }        
         //Luego de la carga de todos los modulos creo una instancia de Support\View
         $this->view= new Support\View();
         //Cargo la configuracion del usuario
         $this->loadUserConfig();
         //Analizo si estoy en modo HTTP o CLI
         if(ENOLA_MODE == 'HTTP'){
-            //Analizo la ejecucion de componente via URL - Veo si hay componentes y si alguno mapea
-            if($this->componentCore != NULL && $this->componentCore->mapsComponents($this->httpCore->httpRequest)){
-                //Ejecuto el componente via URL
-                $this->componentCore->executeUrlComponent($this->httpCore->httpRequest);
-            }else{
-                //Ejecuto el controlador correspondiente
-                $this->httpCore->executeHttpRequest();
-            }
+            //Ejecuto el controlador correspondiente
+            $this->httpCore->executeHttpRequest();
         }else{
             //Ejecuta el cron controller
             $this->cronCore->executeCronController();
@@ -97,7 +73,7 @@ class Application{
     }    
     /**
      * Realiza la carga de modulos, librerias y soporte que necesita el framework para su correcto funcionamiento
-     * sin importar el tipo de requerimiento (HTTP, COMPONENT, CLI, Etc).
+     * sin importar el tipo de requerimiento (HTTP, CLI, Etc).
      */
     private function init(){
         //Load Archivos de Funciones
@@ -124,6 +100,7 @@ class Application{
     }
     /**
      * Carga todas las librerias particulares de la aplicacion que se cargaran automaticamente indicadas en el archivo de configuracion
+     * @deprecated since version 1.2
      */
     protected function loadLibraries(){       
         //Recorro de a una las librerias, las importo
@@ -157,16 +134,6 @@ class Application{
         }else{
             Error::general_error('Cron Controller', 'There isent define any cron controller name');
         }    
-    }
-    /**
-     * Carga el modulo Component si se definido por lo menos un component
-     */
-    protected function loadComponentModule(){
-        //Analizo la carga del modulo component segun si hay o no definiciones
-        if(count($this->context->getComponentsDefinition())){            
-            //Cargo el modulo componente e instancia el Core
-            $this->componentCore= new Component\ComponentCore($this,$this->getRequest(),$this->getResponse());
-        }
     }       
     /**
      * Despues de la carga inicial y las libreria permite que el usuario realice su propia configuracion
@@ -174,38 +141,6 @@ class Application{
      */
     protected function loadUserConfig(){
         require $this->context->getPathApp() . 'load_user_config.php';    
-    }  
-    /**
-     * Si corresponde:
-     * Inicializa el calculo del tiempo de respuesta
-     */
-    public function initPerformance($timeBegin = NULL){        
-        //Analiza si calcula el tiempo que tarda la aplicacion en ejecutarse
-        $this->performance= NULL;
-        if($this->context->CalculatePerformance()){
-            //Incluye la clase Rendimiento 
-            $this->performance= new Support\Performance($timeBegin);
-        }
-    }    
-    /**
-     * Si corresponde:
-     * Finaliza el calculo del tiempo de respuesta e imprime el resultado
-     */
-    public function displayPerformance(){
-        if($this->performance != NULL && $this->showPerformance){
-            $this->performance->terminate();
-            $mensaje= 'The execution time of the APP is: ' . $this->performance->elapsed() . ' seconds';
-            $titulo= 'Performance';
-            //Muestra la informacion al usuario
-            Error::display_information($titulo, $mensaje);
-        }
-    }
-    /**
-     * Setea la variable que indica si se muestra o no el resultado del calculo de performance
-     * @param boolean $show
-     */
-    public function showPerformance($show=TRUE){
-        $this->showPerformance= $show;
     }
     
     /**
