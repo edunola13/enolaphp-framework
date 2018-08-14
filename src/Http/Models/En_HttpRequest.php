@@ -19,6 +19,9 @@ class En_HttpRequest extends Request{
     /** Parametros POST de la peticion
      * @var array */
     public $postParams;
+    /** Parametros de URI
+     * @var array */
+    protected $uriParams;
     /** Referencia a la Session 
      * @var Session */
     public $session;
@@ -227,5 +230,25 @@ class En_HttpRequest extends Request{
         $data= json_decode($json, TRUE);
 
         return $data;
+    }
+    
+    /**
+     * Setea los uri_params de la peticion actual
+     * @param type $uri_params
+     */
+    public function setUriParams($uri_params){
+        $this->uriParams= $uri_params;
+    }
+    /**
+     * Devuelve un uri param si existe y si no devuelve NULL
+     * @param string $key
+     * @return null o string
+     */
+    protected function getUriParam($key){
+        if(isset($this->uriParams[$key])){
+            return $this->uriParams[$key];
+        }else{
+            return NULL;
+        }
     }
 }

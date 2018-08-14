@@ -21,7 +21,7 @@ class Error{
     public static function error_php($type, $level, $message, $file, $line){
         self::write_log($message, $type, $file, $line);
         if(error_reporting()){
-            include PATHAPP . 'errors-info/error_php.php';
+            include PATHAPP . 'errors/error_php.php';
         }
     }    
     /**
@@ -32,7 +32,7 @@ class Error{
         $head= '404 Pagina no Encontrada';
         $message= 'La pagina que solicitaste no existe';
         UrlUri::setEstadoHeader(404);
-        include PATHAPP . 'errors-info/error_404.php';
+        include PATHAPP . 'errors/error_404.php';
         exit;
     }    
     /**
@@ -48,7 +48,7 @@ class Error{
         self::write_log($message, 'General Error');
         if(ENOLA_MODE == 'HTTP' && class_exists('\Enola\Http\UrlUri')){UrlUri::setEstadoHeader($code_error);}
         if(error_reporting()){
-            include PATHAPP . 'errors-info/' . $template . '.php'; 
+            include PATHAPP . 'errors/' . $template . '.php'; 
         }
         exit;
     }
@@ -102,6 +102,6 @@ class Error{
      * @param string $message
      */ 
     public static function display_information($title, $message){
-        include PATHAPP . 'errors-info/information.php'; 
+        include PATHAPP . 'errors/information.php'; 
     }
 }

@@ -302,6 +302,8 @@ class HttpCore {
         $dinamic_method= $uri_params['dinamic'];
         $method= $uri_params['method']; 
         $parameters= $uri_params['params'] ? $uri_params['params'] : array();
+        //SETEO URI PARAMS SOBRE HTTP REQUEST
+        $this->httpRequest->setUriParams($parameters);
         //Analizo si hay parametros en la configuracion
         if(isset($controller_esp['properties'])){
             $this->app->dependenciesEngine->injectProperties($controller, $controller_esp['properties']);

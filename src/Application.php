@@ -90,7 +90,9 @@ class Application{
     /**
      * Carga de modulos de soporte para que el framework trabaje correctamente
      */ 
-    protected function loadFunctionsFiles(){           
+    protected function loadFunctionsFiles(){
+        //Carga del modulo errores - se definen manejadores de errores
+        require $this->context->getPathFra() . 'Support/fn_generic.php'; 
         //Carga del modulo errores - se definen manejadores de errores
         require $this->context->getPathFra() . 'Support/fn_error.php';    
         //Carga de modulo para carga de archivos
