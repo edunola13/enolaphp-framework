@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "enolaphp/core-modules": "dev-master"
+        "enolaphp/core-modules": "dev-dev"
     },
     "require-dev": {        
     },
