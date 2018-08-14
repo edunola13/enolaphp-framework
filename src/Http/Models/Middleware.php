@@ -8,7 +8,7 @@ namespace Enola\Http\Models;
  */
 interface Middleware {
     /**
-     * Realiza la ejecucion del filtro
+     * Realiza la ejecucion del middleware
      * @param En_HttpRequest $request
      * @param En_HttpResponse $response
      */

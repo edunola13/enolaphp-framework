@@ -264,7 +264,7 @@ class EnolaContext {
         $this->librariesDefinition= isset($config['libs']) ? $config['libs'] : [];
         $this->dependenciesFile= $config['dependency_injection'];
         $this->controllersFile= $config['controllers'];
-        $this->middlewaresDefinition= $config['middlewares'];
+        $this->middlewaresDefinition= isset($config['middlewares']) ? $config['middlewares'] : [];
         $this->filtersBeforeDefinition= $config['filters'];
         $this->filtersAfterDefinition= $config['filters_after_processing'];
         
