@@ -111,6 +111,9 @@ class EnolaContext {
     /** Definicion de filtros post procesamiento
      * @var string */
     private $filtersAfterDefinition;
+    /** Contiene la definicion de todos los handlers
+     * @var array */
+    private $handlersDefinition;
     //I18n
     /** Locale por defecto de la aplicacion
      * @var string */
@@ -267,6 +270,7 @@ class EnolaContext {
         $this->middlewaresDefinition= isset($config['middlewares']) ? $config['middlewares'] : [];
         $this->filtersBeforeDefinition= $config['filters'];
         $this->filtersAfterDefinition= $config['filters_after_processing'];
+        $this->handlersDefinition = isset($config['handlers']) ? $config['handlers'] : [];
         
         if(isset($config['vars'])){
             $this->contextVars= $config['vars'];
@@ -420,6 +424,9 @@ class EnolaContext {
     }
     public function getFiltersAfterDefinition(){
         return $this->filtersAfterDefinition;
+    }
+    public function getHandlersDefinition(){
+        return $this->handlersDefinition;
     }
     public function getI18nDefaultLocale(){
         return $this->i18nDefaultLocale;

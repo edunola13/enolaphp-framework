@@ -49,7 +49,8 @@ class Error{
         if(ENOLA_MODE == 'HTTP' && class_exists('\Enola\Http\UrlUri')){UrlUri::setEstadoHeader($code_error);}
         if(error_reporting()){
             include PATHAPP . 'errors-info/' . $template . '.php'; 
-        }        
+        }
+        exit;
     }
     /**
      * Crea o abre un archivo de log y escribe el error correspondiente

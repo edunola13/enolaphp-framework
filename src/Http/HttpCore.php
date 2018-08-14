@@ -1,6 +1,7 @@
 <?php
 namespace Enola\Http;
 use Enola\Support\Error;
+use Exception;
 
 /**
  * Esta clase representa el Nucleo del modulo HTTP y es donde se encuentra toda la funcionalidad del mismo
@@ -12,7 +13,7 @@ use Enola\Support\Error;
  * @category Enola\Http
  * @internal
  */
-class HttpCore{
+class HttpCore {
     /** Referencia al nucleo de la aplicacion 
      * @var \Enola\Application */
     public $app;
@@ -122,24 +123,32 @@ class HttpCore{
      * @param boolean $filter
      */
     public function executeHttpRequest($actualController = NULL, $uriapp = NULL, $filter = TRUE){
-        //Si no se paso controlador, se busca el correspondiente
-        if($actualController == NULL){
-            $actualController= $this->mappingController($uriapp);
-        }
-        //Ejecuto los filtros pre-procesamiento
-        $rtaFilters= true;
-        if($filter){
-            $rtaFilters= $this->executeFilters($this->app->context->getFiltersBeforeDefinition());
-        }
-        //Controlo que desde un filtro no se haya parado la ejecucion
-        if($rtaFilters !== false){
-            //Ejecuto el controlador
-            $this->executeController($actualController, $uriapp);
-            //Ejecuto los filtros post-procesamiento
-            if($filter){
-                $this->executeFilters($this->app->context->getFiltersAfterDefinition());
+        try {
+            //Si no se paso controlador, se busca el correspondiente
+            if($actualController == NULL){
+                $actualController= $this->mappingController($uriapp);
             }
-        }        
+            //Ejecuto los filtros pre-procesamiento
+            $rtaFilters= true;
+            if($filter){
+                $rtaFilters= $this->executeFilters($this->app->context->getFiltersBeforeDefinition());
+            }
+            //Controlo que desde un filtro no se haya parado la ejecucion
+            if($rtaFilters !== false){
+                //Ejecuto el controlador
+                $this->executeController($actualController, $uriapp);
+                //Ejecuto los filtros post-procesamiento
+                if($filter){
+                    $this->executeFilters($this->app->context->getFiltersAfterDefinition());
+                }
+            }
+        }
+        catch (Exception $e) {
+            $catched = $this->executeHandlers($e);
+            if ($catched !== true) {
+                throw $e;
+            }
+        }
     }
     /**
      * Analiza los filtros que mapean con la URI pasada y ejecuta los que correspondan. En caso de no pasar URI se utiliza
@@ -184,11 +193,11 @@ class HttpCore{
     }
     /**
      * Se ejecutan los middlewares que se pasan como parametro
-     * @param array[string] $filters
-     * @param string $uriapp
+     * @param array[string] $middlewares
+     * @return boolean
      */
     protected function executeMiddlewares($middlewares){
-        //Analizo los filtros y los aplico en caso de que corresponda
+        //Analizo los middlewares y los aplico en caso de que corresponda
         $middlewaresDefinition = $this->app->context->getMiddlewaresDefinition();
         foreach ($middlewares as $middlewareName) {
             if (! isset($middlewaresDefinition[$middlewareName])) {
@@ -224,6 +233,44 @@ class HttpCore{
                 Error::general_error('Middleware Error', 'The middleware ' . $middleware['class'] . ' dont implement the method handle()');
             }
         }
+    }
+    /**
+     * Se ejecutan los handlers que se pasan como parametro
+     * @return boolean
+     */
+    protected function executeHandlers(Exception $e){
+        //Aplico los handlers
+        $handlersDefinition = $this->app->context->getHandlersDefinition();
+        foreach ($handlersDefinition as $handler) {            
+            $dir = $this->buildDir($handler, 'handlers');
+            $class = $this->buildClass($handler);
+            if(!class_exists($class)){
+                //Si la clase no existe intento cargarla
+                if(file_exists($dir)){
+                    require_once $dir;
+                }else{
+                    //Avisa que el archivo no existe
+                    Error::general_error('Handler Error', 'The handler ' . $handler['class'] . ' dont exists');
+                } 
+            }
+            $handlerIns= new $class();
+            //Analizo si hay parametros en la configuracion
+            if(isset($handler['properties'])){
+                $this->app->dependenciesEngine->injectProperties($handlerIns, $handler['properties']);
+            }
+            //Analiza si existe el metodo handle
+            if(method_exists($handler, 'handle')){
+                $rta= $handlerIns->handle($this->httpRequest, $this->httpResponse, $e);
+                if($rta === true){
+                    //Quiere decir que fue manejado
+                    return true;
+                }
+            }
+            else{
+                Error::general_error('Handler Error', 'The handler ' . $handler['class'] . ' dont implement the method catch()');
+            }
+        }
+        return false;
     }
     /**
      * Ejecuta el controlador que mapeo anteriormente. Segun su definicion en la configuracion se ejecutara al estilo REST
